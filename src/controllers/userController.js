@@ -1,17 +1,14 @@
-const express = require('express');
-const { User } = require('../database/models');
+const { postUser } = require('../services/userService');
 
-const router = express.Router();
-
-router.get('/', async (_req, res) => {
-  try {
-    const users = await User.findAll();
-
-    return res.status(200).json(users);
-  } catch (e) {
-    console.log(e.message);
-    res.status(500).json({ message: 'Algo deu errado' });
+const create = async (req, res) => {
+  const { body } = req;
+  const call = await postUser(body);
+  if (call.message) {
+    return res.status(call.statusCode || 400).json({ message: call.message });
   }
-});
+  return res.status(201).json({ token: call });
+};
 
-module.exports = router;
+module.exports = {
+  create,
+};

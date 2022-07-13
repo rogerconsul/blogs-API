@@ -29,6 +29,13 @@ const generateToken = async (email, password) => {
   }    
   };
 
+const generateTokenAtPost = async (email, _password) => {
+    const payload = { data: email };
+    const token = await jwt.sign(payload, secret);
+    return token;
+  };
+
 module.exports = {
   generateToken,
+  generateTokenAtPost,
 };

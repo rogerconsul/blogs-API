@@ -1,29 +1,19 @@
 const jwt = require('jsonwebtoken');
 
-const { User } = require('../../models');
+const { User } = require('../database/models');
 
-/* Mesma chave privada que usamos para criptografar o token.
-   Agora, vamos usá-la para descriptografá-lo.
-   Numa aplicação real, essa chave jamais ficaria hardcoded no código assim,
-   e muitos menos de forma duplicada, mas aqui só estamos interessados em
-   ilustrar seu uso ;) */
-const segredo = 'seusecretdetoken';
+const secret = process.env.JWT_SECRET;
 
 module.exports = async (req, res, next) => {
-  /* Aquele token gerado anteriormente virá na requisição através do
-     header Authorization em todas as rotas que queremos que
-     sejam autenticadas. */
-  const token = req.headers['authorization'];
+  const token = req.headers.authorization;
 
-  /* Caso o token não seja informado, simplesmente retornamos
-     o código de status 401 - não autorizado. */
   if (!token) {
     return res.status(401).json({ error: 'Token não encontrado' });
   }
 
   try {
     /* Através o método verify, podemos validar e decodificar o nosso JWT. */
-    const decoded = jwt.verify(token, segredo);
+    const decoded = jwt.verify(token, secret);
     /*
       A variável decoded será um objeto equivalente ao seguinte:
       {
@@ -47,7 +37,7 @@ module.exports = async (req, res, next) => {
     if (!user) {
       return res
         .status(401)
-        .json({ message: 'Erro ao procurar usuário do token.' });
+        .json({ message: 'Token not found' });
     }
 
     /* O usuário existe! Colocamos ele em um campo no objeto req.

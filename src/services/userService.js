@@ -2,7 +2,7 @@ const Joi = require('joi');
 const { User } = require('../database/models');
 const { generateTokenAtPost } = require('./loginService');
 
-const validateBody = async (obj) => {
+const validateBody = (obj) => {
   const schema = Joi.object({
     displayName: Joi.string().required().min(8),
     email: Joi.string().required().email(),
@@ -16,10 +16,10 @@ const validateBody = async (obj) => {
       error.statusCode = 400;
       throw error;
     }
+    return result.value;
   } catch (error) {
     return error;
   }
-  return result.value;
 };
 
 const allValid = async (email, password) => {
@@ -30,15 +30,18 @@ const allValid = async (email, password) => {
 const postUser = async (body) => {
  const { displayName, email, password, image } = body;
 
- const user = await User.findOne({
-  where: { email },
-});
-if (user) {
-  return { status: 409, message: 'User already registered' };
-}
-  const check = await validateBody(body);
+ const check = await validateBody(body);
 
-  if (!check.statusCode) {
+  if (check.statusCode) {
+    return check;
+  }
+  
+  const user = await User.findOne({
+    where: { email },
+  });
+  if (user) {
+    return { status: 409, message: 'User already registered' };
+  }
   await User.create({
     displayName,
     email,
@@ -46,8 +49,6 @@ if (user) {
     image,
   });
   return allValid(email, password);
-}
-  return check;
 };
 
 module.exports = {

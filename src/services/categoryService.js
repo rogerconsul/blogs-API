@@ -7,6 +7,12 @@ const create = async (payload) => {
   return model;
 };
 
+const getAll = async () => {
+  const payload = await Category.findAll();
+  return payload;
+};
+
 module.exports = {
   create,
+  getAll,
 };

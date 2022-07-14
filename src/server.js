@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const loginController = require('./controllers/loginController');
-const { create, getAll } = require('./controllers/userController');
+const { create, getAll, getById } = require('./controllers/userController');
 const validateJWT = require('./middlewares/validateJWT');
 
 const app = require('./api');
@@ -17,5 +17,6 @@ app.get('/', (_request, response) => {
 app.post('/login', loginController);
 app.post('/user', create);
 app.get('/user', validateJWT, getAll);
+app.get('/user/:id', validateJWT, getById);
 
 app.listen(port, () => console.log('ouvindo porta', port));

@@ -56,7 +56,13 @@ const getAllService = async () => {
   return payload;
 };
 
+const getByIdService = async (id) => {
+  const payload = await User.findOne({ where: { id }, attributes: { exclude: ['password'] } });
+  return payload;
+};
+
 module.exports = {
   postUser,
   getAllService,
+  getByIdService,
 };

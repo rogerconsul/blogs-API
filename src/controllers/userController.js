@@ -1,4 +1,4 @@
-const { postUser, getAllService } = require('../services/userService');
+const { postUser, getAllService, getByIdService } = require('../services/userService');
 
 const create = async (req, res) => {
   const { body } = req;
@@ -14,7 +14,17 @@ const getAll = async (_req, res) => {
   return res.status(200).json(payload);
 };
 
+const getById = async (req, res) => {
+  const { id } = req.params;
+  const payload = await getByIdService(id);
+  if (!payload) {
+    return res.status(404).json({ message: 'User does not exist' });
+  }
+  return res.status(200).json(payload);
+};
+
 module.exports = {
   create,
   getAll,
+  getById,
 };

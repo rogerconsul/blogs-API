@@ -51,6 +51,12 @@ const postUser = async (body) => {
   return allValid(email, password);
 };
 
+const getAllService = async () => {
+  const payload = await User.findAll({ attributes: { exclude: ['password'] } });
+  return payload;
+};
+
 module.exports = {
   postUser,
+  getAllService,
 };

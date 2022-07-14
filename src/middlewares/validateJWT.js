@@ -8,30 +8,17 @@ module.exports = async (req, res, next) => {
   const token = req.headers.authorization;
 
   if (!token) {
-    return res.status(401).json({ error: 'Token não encontrado' });
+    return res.status(401).json({ message: 'Token not found' });
   }
 
   try {
-    /* Através o método verify, podemos validar e decodificar o nosso JWT. */
     const decoded = jwt.verify(token, secret);
-    /*
-      A variável decoded será um objeto equivalente ao seguinte:
-      {
-        data: {
-          id: '3',
-          username: 'italssodj',
-          password: 'senha123'
-        },
-        iat: 1582587327,
-        exp: 1584774714908
-      }
-    */
-
+   
     /* Caso o token esteja expirado, a própria biblioteca irá retornar um erro,
        por isso não é necessário fazer validação do tempo.
        Caso esteja tudo certo, nós então buscamos o usuário na base para obter seus dados atualizados */
 
-    const user = await User.findOne({ where: { username: decoded.data.username } });
+    const user = await User.findOne({ where: { email: decoded.data.email } });
 
     /* Não existe um usuário na nossa base com o id informado no token. */
     if (!user) {
@@ -49,6 +36,6 @@ module.exports = async (req, res, next) => {
        é a própria callback da rota. */
     next();
   } catch (err) {
-    return res.status(401).json({ message: err.message });
+    return res.status(401).json({ message: 'Expired or invalid token' });
   }
 };

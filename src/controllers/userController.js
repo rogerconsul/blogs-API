@@ -1,4 +1,4 @@
-const { postUser } = require('../services/userService');
+const { postUser, getAllService } = require('../services/userService');
 
 const create = async (req, res) => {
   const { body } = req;
@@ -9,6 +9,12 @@ const create = async (req, res) => {
   return res.status(201).json({ token: call });
 };
 
+const getAll = async (_req, res) => {
+  const payload = await getAllService();
+  return res.status(200).json(payload);
+};
+
 module.exports = {
   create,
+  getAll,
 };

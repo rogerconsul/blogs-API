@@ -4,6 +4,7 @@ const loginController = require('./controllers/loginController');
 const { create, getAll, getById } = require('./controllers/userController');
 const validateJWT = require('./middlewares/validateJWT');
 const { postCategory, getCategories } = require('./controllers/categoryController');
+const { blogpost } = require('./controllers/postController');
 
 const app = require('./api');
 
@@ -21,5 +22,6 @@ app.get('/user', validateJWT, getAll);
 app.get('/user/:id', validateJWT, getById);
 app.post('/categories', validateJWT, postCategory);
 app.get('/categories', validateJWT, getCategories);
+app.post('/post', validateJWT, blogpost);
 
 app.listen(port, () => console.log('ouvindo porta', port));

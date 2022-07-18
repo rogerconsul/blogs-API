@@ -1,3 +1,5 @@
+const Sequelize = require('sequelize');
+
 const BlogPost = (sequelize, DataTypes) => {
   /**
  * 
@@ -8,8 +10,8 @@ const BlogPost = sequelize.define("BlogPost", {
   title: DataTypes.STRING,
   content: DataTypes.STRING,
   userId: {type: DataTypes.STRING},
-  published: DataTypes.DATE,
-  updated: DataTypes.DATE
+  published: {type: DataTypes.DATE, defaultValue: Sequelize.NOW },
+  updated: {type: DataTypes.DATE, defaultValue: Sequelize.NOW }
 },
 {
   timestamps: false,
